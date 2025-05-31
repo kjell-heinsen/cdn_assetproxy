@@ -2,6 +2,13 @@
 header("Access-Control-Allow-Origin: *");
 require_once '../config.php';
 
+
+function messages($msg){
+    if(defined('CDNNAME')){
+      $msg = $msg . ' - ' . CDNNAME;
+    }
+    return $msg;
+}
 // Verbesserte Referer-Prüfung mit zusätzlichen Sicherheitsmaßnahmen
 function validateReferer($allowed_domains) {
     $referer = $_SERVER['HTTP_REFERER'] ?? '';
@@ -20,7 +27,7 @@ function validateReferer($allowed_domains) {
 
 if (!validateReferer($allowed_domains)) {
     http_response_code(403);
-    exit('Zugriff verweigert');
+    exit(messages('Zugriff verweigert'));
 }
 
 $path = $_GET['path'] ?? '';
@@ -51,19 +58,19 @@ $path = sanitizePath($path);
 // Leerer Pfad nach Bereinigung = Angriff
 if (empty($path)) {
     http_response_code(400);
-    exit('Invalid path');
+    exit(messages('Pfad ist ungültig'));
 }
 
 // Striktere Zeichen-Validierung
 if (!preg_match('/^[a-zA-Z0-9\/\-_\.]+$/', $path)) {
     http_response_code(400);
-    exit('Invalid path characters');
+    exit(messages('Zeichen im Pfad sind nicht korrekt.'));
 }
 
 // Keine aufeinanderfolgenden Punkte erlauben
 if (strpos($path, '..') !== false) {
     http_response_code(400);
-    exit('Path traversal detected');
+    exit(messages('Pfade klettern wurde entdeckt und geloggt.'));
 }
 
 // Erweiterte Dateierweiterungsprüfung
@@ -83,14 +90,14 @@ $allowed_extensions = [
 
 if (!array_key_exists($extension, $allowed_extensions)) {
     http_response_code(400);
-    exit('File type not allowed');
+    exit(messages('Der Dateityp ist nicht erlaubt.'));
 }
 
 // KRITISCH: Sichere Pfad-Konstruktion
 $assets_base = realpath(DOCROOT . '/assets/');
 if (!$assets_base) {
     http_response_code(500);
-    exit('Assets directory not found');
+    exit(messages('Assetbasis wurde nicht gefunden.'));
 }
 
 $file_path = $assets_base . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $path);
@@ -99,27 +106,27 @@ $real_path = realpath($file_path);
 // Mehrschichtige Sicherheitsprüfung
 if (!$real_path) {
     http_response_code(404);
-    exit('File not found');
+    exit(messages('Datei nicht gefunden.'));
 }
 
 // Sicherstellen, dass Datei im erlaubten Bereich liegt
 if (strpos($real_path, $assets_base . DIRECTORY_SEPARATOR) !== 0) {
     error_log("Security violation: Attempted access to $real_path from IP " . $_SERVER['REMOTE_ADDR']);
     http_response_code(403);
-    exit('Access denied');
+    exit(messages('Zugriff verweigert.'));
 }
 
 // Datei existiert und ist reguläre Datei?
 if (!is_file($real_path) || !is_readable($real_path)) {
     http_response_code(404);
-    exit('File not found');
+    exit(messages('Datei nicht gefunden.'));
 }
 
 // Zusätzliche Sicherheitsprüfung: Dateigröße begrenzen (z.B. 10MB)
 $max_file_size = 20 * 1024 * 1024; // 20MB
 if (filesize($real_path) > $max_file_size) {
     http_response_code(413);
-    exit('File too large');
+    exit(messages('Datei ist zu groß.'));
 }
 
 // Sichere Header setzen
