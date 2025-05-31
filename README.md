@@ -34,8 +34,8 @@ Schutz vor dem Wandern durch verschiedene Pfade
 ### Praktisches Beispiel 
 Beispiele für die Einbindung von CSS und Javascript
 ```html
-<link rel="stylesheet" href="https://cdn.deine-domain.de/asset-proxy.php?path=css/bootstrap/bootstrap.min.css">
-<script src="https://cdn.deine-domain.de/asset-proxy.php?path=js/vendor/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdn.deine-domain.de/index.php?path=css/bootstrap/bootstrap.min.css">
+<script src="https://cdn.deine-domain.de/index.php?path=js/vendor/jquery.min.js"></script>
 ```
 ## Lizenz
 Apache-2.0 license
