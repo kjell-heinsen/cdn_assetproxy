@@ -38,4 +38,4 @@ Beispiele für die Einbindung von CSS und Javascript
 <script src="https://cdn.deine-domain.de/asset-proxy.php?path=js/vendor/jquery.min.js"></script>
 ```
 ## Lizenz
-GPL v2 or later
+Apache-2.0 license
