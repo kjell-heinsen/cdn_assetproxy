@@ -26,7 +26,7 @@ Das heißt, es kommen nur Domains an die Assets die von dir ausgewählt wurden u
 Enthalten sind die Kern-Assets von AdminLTE v3 https://github.com/ColorlibHQ/AdminLTE/tree/v3
 
 ### Referer Schutz
-Daten können nur von bestimmten Domains angesteuert werden
+Daten können nur von bestimmten Domains angesteuert werden damit wird ein Hotlinking auf Assets vermieden
 
 ### Pfad-Traversal Schutz
 Schutz vor dem Wandern durch verschiedene Pfade
