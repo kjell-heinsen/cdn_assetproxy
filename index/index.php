@@ -2,12 +2,15 @@
 header("Access-Control-Allow-Origin: *");
 require_once '../config.php';
 
+define('CDNVERSION', '1.0.0');
 
 function messages($msg){
+    $message = '';
     if(defined('CDNNAME')){
-      $msg = $msg . ' - ' . CDNNAME;
+      $message = '<title>'.CDNNAME.'</title>';
+      $message .= $msg . ' - ' . CDNNAME.' v'.CDNVERSION;
     }
-    return $msg;
+    return $message;
 }
 // Verbesserte Referer-Prüfung mit zusätzlichen Sicherheitsmaßnahmen
 function validateReferer($allowed_domains) {
